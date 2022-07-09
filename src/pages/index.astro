@@ -1,0 +1,54 @@
+---
+import AstroLogo from '../components/AstroLogo.astro';
+---
+
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8' />
+  <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+  <title>bun + astro</title>
+</head>
+
+<body>
+  <h1>hello buns!</h1>
+  <div class='logos'>
+    <img src='https://bun.sh/logo.png' alt='Bun logo' />
+    <AstroLogo class='svg' />
+  </div>
+
+  <style is:global>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      box-sizing: border-box;
+    }
+  </style>
+
+  <style>
+    html,
+    body {
+      color-scheme: dark light;
+      height: 100%;
+      font-family: ui-monospace, monospace, sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 1rem;
+    }
+
+    .svg>:global(path:first-child) {
+      fill: currentColor;
+    }
+
+    .logos {
+      display: flex;
+    }
+  </style>
+</body>
+
+</html>
