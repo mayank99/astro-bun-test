@@ -2,7 +2,7 @@
 
 > **Note**: Make sure to install [bun](https://bun.sh/) beforehand.
 
-WIP
+This is a small test of using Astro SSR with Bun using a custom adapter.
 
 ## How to run
 
@@ -15,6 +15,8 @@ bun install --backend=copyfile
 ```
 bun run build --experimental-ssr
 ```
+
+This will create a server entrypoint which you can then serve with bun.
 
 ```
 bun run dist/server/entry.mjs

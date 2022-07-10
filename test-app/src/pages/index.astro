@@ -1,5 +1,6 @@
 ---
 import AstroLogo from '../components/AstroLogo.astro';
+const date = new Date();
 ---
 
 <html lang='en'>
@@ -15,6 +16,8 @@ import AstroLogo from '../components/AstroLogo.astro';
   <div class='logos'>
     <img src='https://bun.sh/logo.png' alt='Bun logo' />
     <AstroLogo class='svg' aria-label='Astro logo' />
+    <p>It's {date.toLocaleDateString()}, {date.toLocaleTimeString()} somewhere.
+    </p>
   </div>
 
   <style is:global>
