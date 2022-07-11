@@ -1,34 +1,21 @@
-FROM jarredsumner/bun:edge as deps
-RUN mkdir /repo/
-WORKDIR /repo/
+FROM debian:stable-slim as get
 
-ADD test-app/package.json test-app/bun.lockb ./
-RUN bun install
+WORKDIR /bun
 
-FROM node:18-bullseye-slim as astro
-RUN mkdir /repo/
-WORKDIR /repo/
+RUN apt-get update
+RUN apt-get install curl unzip -y
+RUN curl --fail --location --progress-bar --output "/bun/bun.zip" "https://github.com/Jarred-Sumner/bun/releases/download/bun-v0.1.2/bun-linux-x64.zip"
+RUN unzip -d /bun -q -o "/bun/bun.zip"
+RUN mv /bun/bun-linux-x64/bun /usr/local/bin/bun
+RUN chmod 777 /usr/local/bin/bun
 
-COPY --from=deps /opt/bun/bin/bun /bin/bun
-COPY --from=deps /repo/node_modules /repo/node_modules
+FROM debian:stable-slim
+COPY --from=get /usr/local/bin/bun /bin/bun
+WORKDIR /app
+ADD . ./
 
-ADD test-app ./
+WORKDIR /app/test-app
+RUN bun install --backend=copyfile
+RUN bun run build --experimental-ssr
 
-RUN bun run build
-
-
-FROM jarredsumner/bun:edge
-RUN mkdir /repo/
-WORKDIR /repo/
-
-COPY --from=deps /repo/node_modules /repo/node_modules 
-COPY --from=deps /repo/package.json /repo/package.json
-COPY --from=deps /repo/bun.lockb /repo/bun.lockb
-COPY --from=astro /repo/build /repo/build
-COPY --from=astro /repo/public /repo/public
-
-ADD test-app/dist/server ./
-ADD test-app/dist/client ./
-
-EXPOSE 3000
-CMD ["entry.mjs"]
+CMD ["bun", "run", "/app/test-app/dist/server/entry.mjs"]
