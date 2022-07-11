@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM debian:stable-slim as get
 
 WORKDIR /bun
 
@@ -9,13 +9,13 @@ RUN unzip -d /bun -q -o "/bun/bun.zip"
 RUN mv /bun/bun-linux-x64/bun /usr/local/bin/bun
 RUN chmod 777 /usr/local/bin/bun
 
+FROM debian:stable-slim
+COPY --from=get /usr/local/bin/bun /bin/bun
 WORKDIR /app
-RUN addgroup --gid 101 --system appuser && adduser --uid 101 --system appuser
-RUN chown -R 101:101 /app && chmod -R g+w /app
-USER appuser
 COPY . ./
 
-WORKDIR /app/test-app
+WORKDIR ./test-app
+RUN ls -la
 RUN bun install --backend=copyfile
 RUN bun run build --experimental-ssr
 
